@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>مسح رمز الصالة — صحّتي</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#D4AF37">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   صحّتي — نظام التصميم الأساسي (ثيم أسود ذهبي فاخر)
+   ========================================================================== */
+
+:root {
+  --bg: #0C0B0A;
+  --surface: #1B1815;
+  --surface-2: #262019;
+
+  --text: #F3ECDD;
+  --text-soft: #A8987C;
+
+  --primary: #D4AF37;
+  --primary-dark: #B8952C;
+  --on-primary: #14120E;
+
+  --accent: #E0A63A;
+  --danger: #E4574C;
+  --line: #2E2820;
+
+  --shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+
+  --gap-xs: 6px;
+  --gap-sm: 12px;
+  --gap-md: 20px;
+  --gap-lg: 32px;
+  --gap-xl: 48px;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  --font-display: 'Cairo', sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { direction: rtl; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 76px;
+}
+
+h1, h2, h3, .display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 var(--gap-sm) 0;
+  line-height: 1.3;
+}
+h1 { font-size: 28px; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+
+p { margin: 0 0 var(--gap-sm) 0; color: var(--text-soft); }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+
+.screen {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+}
+.container { padding: var(--gap-md); }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: var(--gap-sm);
+  width: 100%; padding: 15px var(--gap-md);
+  border-radius: var(--radius-md); border: none;
+  font-weight: 700; font-size: 16px; cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--line); }
+.btn-outline:hover { border-color: var(--primary); }
+.btn-ghost { background: transparent; color: var(--text-soft); padding: 10px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pill-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border-radius: var(--radius-pill);
+  font-weight: 700; font-size: 14px; cursor: pointer;
+  border: 1.5px solid var(--line); background: transparent; color: var(--text);
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.pill-btn.filled { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.pill-btn.surface { background: var(--surface); border-color: var(--line); }
+
+.field { margin-bottom: var(--gap-md); }
+.field label { display: block; font-size: 14px; font-weight: 600; color: var(--text-soft); margin-bottom: 6px; }
+.field input, .field select {
+  width: 100%; padding: 13px 14px;
+  border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); outline: none;
+  transition: border-color 0.15s ease;
+}
+.field input::placeholder { color: var(--text-soft); opacity: 0.7; }
+.field input:focus, .field select:focus { border-color: var(--primary); }
+
+.hint { font-size: 13px; color: var(--text-soft); opacity: 0.9; margin-top: 4px; }
+.error-text { font-size: 13px; color: var(--danger); margin-top: 4px; display: none; }
+
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 700; }
+.badge-success { background: rgba(212,175,55,0.14); color: var(--primary); }
+.badge-warn { background: rgba(224,166,58,0.16); color: var(--accent); }
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--gap-md); background: var(--bg); border-bottom: 1px solid var(--line); color: var(--text);
+}
+.topbar h1 { color: var(--text); font-size: 20px; margin: 0; }
+
+.divider { display: flex; align-items: center; gap: var(--gap-sm); color: var(--text-soft); font-size: 13px; margin: var(--gap-md) 0; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+.bio-option {
+  display: flex; align-items: center; gap: var(--gap-sm);
+  padding: 16px; border: 1.5px solid var(--line); border-radius: var(--radius-md);
+  margin-bottom: var(--gap-sm); cursor: pointer; background: var(--surface);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.bio-option.selected { border-color: var(--primary); background: rgba(212,175,55,0.08); }
+.bio-option .icon {
+  width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.bio-option .icon svg { width: 22px; height: 22px; stroke: var(--text); }
+.bio-option .texts { flex: 1; }
+.bio-option .texts strong { display: block; font-size: 15px; color: var(--text); }
+.bio-option .texts span { font-size: 13px; color: var(--text-soft); }
+.bio-option.linked { border-color: var(--primary); background: rgba(212,175,55,0.08); }
+.bio-option .check {
+  width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+}
+.bio-option.linked .check { background: var(--primary); border-color: var(--primary); }
+.bio-option .check svg { width: 13px; height: 13px; stroke: var(--on-primary); display: none; }
+.bio-option.linked .check svg { display: block; }
+
+.toast {
+  position: fixed; bottom: 90px; right: 50%; transform: translateX(50%);
+  background: var(--surface-2); color: var(--text); padding: 12px 22px;
+  border-radius: var(--radius-md); font-size: 14px; box-shadow: var(--shadow);
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease, bottom 0.25s ease;
+  z-index: 200; max-width: 90%; text-align: center; border: 1px solid var(--line);
+}
+.toast.show { opacity: 1; bottom: 100px; }
+.toast.error { background: var(--danger); color: #fff; border-color: transparent; }
+.toast.success { background: var(--primary); color: var(--on-primary); border-color: transparent; }
+
+.spinner {
+  width: 20px; height: 20px; border: 2.5px solid rgba(212,175,55,0.25);
+  border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------------- الهيدر الزخرفي: شعار الرياضي المتحرك ---------------- */
+
+.athlete-hero {
+  position: relative;
+  height: 176px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(212,175,55,0.16) 0%, transparent 60%),
+    linear-gradient(180deg, #14120E 0%, #0C0B0A 100%);
+  border-radius: 0 0 28px 28px;
+  border-bottom: 1px solid var(--line);
+}
+.athlete-hero .hero-content {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2px;
+}
+.athlete-hero .hero-content h1 { color: var(--primary); margin-bottom: 0; letter-spacing: 0.5px; }
+.athlete-hero .hero-content p { margin: 0; font-size: 13px; color: var(--text-soft); }
+
+.athlete-hero .glow-line {
+  position: absolute; bottom: 34%; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.55), transparent);
+  animation: glow-run 1.6s linear infinite;
+  z-index: 1;
+}
+.athlete-hero .glow-line.g1 { left: 0; width: 40%; animation-delay: 0s; }
+.athlete-hero .glow-line.g2 { left: 0; width: 25%; top: 58%; animation-delay: 0.5s; }
+@keyframes glow-run {
+  0% { transform: translateX(-40%); opacity: 0; }
+  20% { opacity: 0.9; }
+  80% { opacity: 0.9; }
+  100% { transform: translateX(320%); opacity: 0; }
+}
+
+.athlete-figure { width: 86px; height: 100px; z-index: 2; position: relative; }
+
+@media (prefers-reduced-motion: reduce) {
+  .athlete-hero .glow-line { animation: none !important; display: none; }
+}
+
+.bottom-nav {
+  position: fixed; bottom:0; right:0; left:0; max-width:480px; margin:0 auto;
+  background: var(--surface); border-top: 1px solid var(--line);
+  display:flex; justify-content:space-around; padding: 10px 0 14px;
+}
+.bottom-nav a { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; color:var(--text-soft); font-weight:600; }
+.bottom-nav a.active { color: var(--primary); }
+.bottom-nav svg { width:22px; height:22px; }
+
+.scan-wrap {
+  position: relative; width: 100%; aspect-ratio: 3/4; max-height: 55vh;
+  background: #000; border-radius: var(--radius-lg); overflow: hidden;
+  margin-bottom: var(--gap-md); display:flex; align-items:center; justify-content:center;
+}
+.scan-wrap video { width:100%; height:100%; object-fit: cover; }
+.scan-frame {
+  position:absolute; inset: 15%; border: 3px solid var(--primary); border-radius: var(--radius-md);
+  box-shadow: 0 0 0 2000px rgba(0,0,0,0.35); pointer-events:none;
+}
+.scan-placeholder { color: var(--text-soft); text-align:center; padding: var(--gap-md); font-size:13px; }
+.scan-placeholder svg { width:40px; height:40px; stroke: var(--text-soft); margin: 0 auto var(--gap-sm); display:block; }
+
+.manual-box { background: var(--surface); border:1px solid var(--line); border-radius: var(--radius-md); padding: var(--gap-md); margin-top: var(--gap-md); }
+
+.success-overlay {
+  position: fixed; inset:0; z-index:300; background: rgba(12,11,10,0.94);
+  display:none; align-items:center; justify-content:center; padding: var(--gap-md);
+}
+.success-overlay.show { display:flex; }
+.success-card { width:100%; max-width:340px; background: var(--surface); border:1px solid var(--line); border-radius: var(--radius-lg); padding: var(--gap-lg) var(--gap-md); text-align:center; }
+.success-card .icon-ok { width:60px; height:60px; border-radius:50%; background: rgba(212,175,55,0.14); display:flex; align-items:center; justify-content:center; margin:0 auto var(--gap-md); }
+.success-card .icon-ok svg { width:28px; height:28px; stroke: var(--primary); }
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <div class="topbar">
+    <a href="profile.html" class="btn-ghost" style="padding:6px;">→ رجوع</a>
+    <h1>مسح رمز الصالة</h1>
+    <span style="width:40px;"></span>
+  </div>
+
+  <div class="container">
+
+    <p>وجّه الكاميرا نحو رمز QR الموجود عند مدخل الصالة الرياضية لتسجيل حضورك.</p>
+
+    <div class="scan-wrap" id="scan-wrap">
+      <div class="scan-placeholder" id="scan-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5a1 1 0 0 1 1-1h2M4 17v2a1 1 0 0 0 1 1h2M20 7V5a1 1 0 0 0-1-1h-2M20 17v2a1 1 0 0 1-1 1h-2M7 12h10"/></svg>
+        الكاميرا غير مفعّلة بعد
+      </div>
+      <video id="scan-video" playsinline autoplay muted style="display:none;"></video>
+      <div class="scan-frame" id="scan-frame" style="display:none;"></div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-open-camera">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg>
+      فتح الكاميرا
+    </button>
+    <div class="error-text" id="cam-error" style="text-align:center; margin-top:10px;"></div>
+
+    <div class="manual-box">
+      <label style="display:block; font-size:13px; font-weight:600; color:var(--text-soft); margin-bottom:8px;">أو أدخل الرمز يدويًا (لو الكاميرا ما تشتغل على جهازك)</label>
+      <div style="display:flex; gap:8px;">
+        <input id="manual-code" type="text" placeholder="SEHATI-GYM:..." style="flex:1; padding:12px; border:1.5px solid var(--line); border-radius: var(--radius-sm); background: var(--bg); color: var(--text);">
+        <button class="btn btn-primary" id="btn-manual-confirm" style="width:auto; padding:0 18px;">تأكيد</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="success-overlay" id="success-overlay">
+  <div class="success-card">
+    <div class="icon-ok"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h3>تم تسجيل حضورك!</h3>
+    <p id="success-msg" style="margin-bottom:var(--gap-lg);"></p>
+    <button class="btn btn-primary" id="btn-success-ok">تمام</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  const user = Auth.requireAuth();
+  let stream = null;
+  let detectorTimer = null;
+
+  function showToast(msg, type) { App.appToast(msg, type); }
+
+  async function openCamera() {
+    const errEl = document.getElementById('cam-error');
+    errEl.style.display = 'none';
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      errEl.textContent = 'المتصفح ما يدعم الوصول للكاميرا — استخدم الإدخال اليدوي بالأسفل.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      const video = document.getElementById('scan-video');
+      video.srcObject = stream;
+      document.getElementById('scan-placeholder').style.display = 'none';
+      video.style.display = 'block';
+      document.getElementById('scan-frame').style.display = 'block';
+      document.getElementById('btn-open-camera').style.display = 'none';
+      startDetection(video);
+    } catch (err) {
+      errEl.textContent = 'ما قدرنا نفتح الكاميرا — تأكد إنك وافقت على صلاحية الكاميرا من إعدادات المتصفح.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  function startDetection(video) {
+    if (!('BarcodeDetector' in window)) {
+      /* المتصفح ما يدعم اكتشاف QR تلقائيًا (شائع على آيفون سفاري) — الكاميرا تفتح لكن المسح يدوي بالأسفل */
+      return;
+    }
+    const detector = new BarcodeDetector({ formats: ['qr_code'] });
+    detectorTimer = setInterval(async () => {
+      try {
+        const codes = await detector.detect(video);
+        if (codes.length) {
+          clearInterval(detectorTimer);
+          handleScannedCode(codes[0].rawValue);
+        }
+      } catch (e) { /* تجاهل أخطاء الإطار الواحد */ }
+    }, 400);
+  }
+
+  function handleScannedCode(value) {
+    stopCamera();
+    if (!value.startsWith('SEHATI-GYM:')) {
+      showToast('هذا الرمز مو رمز دخول صالة صحّتي', 'error');
+      return;
+    }
+    logCheckin(value);
+    showSuccess('تم التحقق من رمز الصالة بنجاح.');
+  }
+
+  function stopCamera() {
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    if (detectorTimer) { clearInterval(detectorTimer); detectorTimer = null; }
+  }
+
+  function logCheckin(code) {
+    const key = 'sehati_checkins_' + user.id;
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
+    list.push({ code, at: new Date().toISOString() });
+    localStorage.setItem(key, JSON.stringify(list.slice(-50)));
+  }
+
+  function showSuccess(msg) {
+    document.getElementById('success-msg').textContent = msg;
+    document.getElementById('success-overlay').classList.add('show');
+  }
+  document.getElementById('btn-success-ok').addEventListener('click', () => {
+    document.getElementById('success-overlay').classList.remove('show');
+    window.location.href = 'profile.html';
+  });
+
+  document.getElementById('btn-open-camera').addEventListener('click', openCamera);
+
+  document.getElementById('btn-manual-confirm').addEventListener('click', () => {
+    const val = document.getElementById('manual-code').value.trim();
+    if (!val) { showToast('أدخل الرمز أولًا', 'error'); return; }
+    handleScannedCode(val);
+  });
+
+  window.addEventListener('beforeunload', stopCamera);
+</script>
+</body>
+</html>
